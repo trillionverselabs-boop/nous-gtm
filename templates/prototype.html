@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Signal Discovery Headline -->
+<div class="snapshot-page-header">
+    <div class="snapshot-label">GTM PORTFOLIO FOR NOUS RESEARCH</div>
+    <h1 class="snapshot-title snapshot-title-icon">
+        <svg class="snapshot-card-icon icon-cyan" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 15l2-2 2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 8v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="16" cy="9" r="1" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Signal Discovery
+        <a href="https://github.com/trillionverselabs-boop/nous-gtm" target="_blank" class="github-link" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="github-icon">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.81 8.21 11.4.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.04-3.34.73-4.04-1.61-4.04-1.61C4.42 18.04 3.63 17.71 3.63 17.71c-1.1-.75.08-.73.08-.73 1.22.09 1.86 1.26 1.86 1.26 1.08 1.86 2.82 1.33 3.51 1.02.11-.79.42-1.33.76-1.63-2.66-.31-5.47-1.33-5.47-5.93 0-1.29.47-2.35 1.23-3.19-.13-.31-.54-1.56.11-3.26 0 0 1.01-.32 3.29 1.24a11.4 11.4 0 013.02-.41c1.02.01 2.05.15 3.02.41 2.28-1.56 3.29-1.24 3.29-1.24.65 1.7.24 2.95.12 3.26.76.84 1.23 1.9 1.23 3.19 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.21.7.83.58A12.004 12.004 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            View code
+        </a>
+        <span class="snapshot-subtitle-inline">{{ prototype_data.subtitle }}</span>
+    </h1>
+</div>
+
+<!-- ─── THREE-WAY DASHBOARD ROW ─────────────────────────────────────── -->
+<!-- Drill-holder BEFORE dashboard so clicked cards appear above/through it -->
+<div id="drill-holder"></div>
+
+<!-- Click hint -->
+<p class="text-meta" style="margin: 8px 0 16px; font-size: 0.75rem; text-align: center;">
+    <span style="display: inline-flex; align-items: center; gap: 4px;">
+        <span style="color: var(--dim);">●</span> Click any bar for evidence &amp; methodology
+    </span>
+</p>
+
+<div class="dashboard-row">
+
+    <!-- COLUMN 1: Conversion Funnel (structure only) -->
+    <div class="dashboard-col">
+        <div class="card dashboard-card card-cyan-thin">
+            <h4 class="dashboard-card-title accent-cyan">Conversion Funnel</h4>
+            <p class="section-subtitle" style="margin-bottom: 8px; font-size: 0.75rem;">
+                Download → Signup → Paid → Revenue. Requires live conversion data to populate.
+            </p>
+            <div class="funnel-container">
+                <div class="funnel-bar" onclick="toggleFunnel(0)">
+                    <div class="funnel-bar-row">
+                        <div class="funnel-bar-label">Agent Downloads</div>
+                        <div class="funnel-bar-track"><div class="funnel-bar-fill cyan" style="width:100%; min-width:80px;">—</div></div>
+                    </div>
+                </div>
+                <div class="funnel-bar" onclick="toggleFunnel(1)">
+                    <div class="funnel-bar-row">
+                        <div class="funnel-bar-label">Portal Signups</div>
+                        <div class="funnel-bar-track"><div class="funnel-bar-fill purple" style="width:0%;">—</div></div>
+                    </div>
+                </div>
+                <div class="funnel-bar" onclick="toggleFunnel(2)">
+                    <div class="funnel-bar-row">
+                        <div class="funnel-bar-label">Paid Tier Adopters</div>
+                        <div class="funnel-bar-track"><div class="funnel-bar-fill green" style="width:0%;">—</div></div>
+                    </div>
+                </div>
+                <div class="funnel-bar" onclick="toggleFunnel(3)">
+                    <div class="funnel-bar-row">
+                        <div class="funnel-bar-label">Annualized Revenue</div>
+                        <div class="funnel-bar-track"><div class="funnel-bar-fill hermes" style="width:0%;">—</div></div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-meta" style="margin-top: 12px; font-size: 0.78rem;">
+                Click any stage to see the metrics I'd instrument and the GTM hypothesis that drives each.
+            </p>
+        </div>
+    </div>
+
+    <!-- COLUMN 2: Pain Point Clusters -->
+    <div class="dashboard-col">
+        <div class="card dashboard-card card-purple-thin">
+            <h4 class="dashboard-card-title accent-purple">Pain Point Clusters</h4>
+            <p class="section-subtitle" style="margin-bottom: 8px; font-size: 0.75rem;">Real signal, ranked by irritation × gap. Click any bar for evidence.</p>
+            <div class="cluster-bar-chart">
+                {% for cluster in prototype_data.sample_clusters %}
+                <div class="cluster-bar" onclick="toggleCluster({{ loop.index0 }})">
+                    <!-- Row 1: Name + priority badge -->
+                    <div class="cluster-bar-header">
+                        <div class="cluster-bar-name">{{ cluster.name }}</div>
+                        <span class="badge {{ cluster.badge }} cluster-priority-badge" style="font-size:0.62rem;">{{ cluster.tier }}</span>
+                    </div>
+                    <!-- Row 2: Frequency score bar -->
+                    <div class="cluster-bar-track-row">
+                        <div class="cluster-bar-fill {{ 'cyan' if loop.index0 == 0 else ('purple' if loop.index0 == 1 else ('green' if loop.index0 == 2 else ('yellow' if loop.index0 == 3 else 'hermes'))) }}"
+                             style="width: {{ (cluster.count / max_cluster * 100) | round(0) }}%;">
+                            {{ cluster.signal_frequency_score }}/100
+                        </div>
+                    </div>
+                    <!-- Row 3: Signals count + source dots -->
+                    <div class="cluster-bar-footer">
+                        <span class="cluster-bar-count">{{ cluster.count }} signals</span>
+                        <div style="display: flex; gap: 4px;">
+                            {% set platforms = cluster.sources | map(attribute='platform') | list %}
+                            {% for p in ['github', 'hn', 'huggingface', 'reddit'] %}
+                                {% if p in platforms %}
+                                <div class="source-dot {{ p }}" title="{{ p }}: {{ platforms | select('equalto', p) | list | length }} signals"></div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- COLUMN 3: Competitor Friction -->
+    <div class="dashboard-col">
+        <div class="card dashboard-card card-green-thin">
+            <h4 class="dashboard-card-title accent-yellow">Competitor Friction</h4>
+            <p class="section-subtitle" style="margin-bottom: 8px; font-size: 0.75rem;">Real mention counts from developer signal. Click any bar for evidence.</p>
+            <div class="competitor-bar-chart">
+                {% for comp, count in competitor_data.items() %}
+                <div class="competitor-bar" onclick="toggleCompetitor('{{ comp }}')">
+                    <div class="competitor-bar-label">{{ comp | capitalize }}</div>
+                    <div class="competitor-bar-track">
+                        <div class="competitor-bar-fill {{ comp }}" style="width: {{ (count / max_competitor * 100) | round(0) }}%;"></div>
+                    </div>
+                    <div class="competitor-bar-count">{{ count }} mention{{ 's' if count != 1 else '' }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Cluster Drill-down Templates ────────────────────────────────── -->
+{% for cluster in prototype_data.sample_clusters %}
+<div class="drill-template" id="cluster-template-{{ loop.index0 }}" data-cluster-id="{{ loop.index0 }}">
+    <div class="drill-detail">
+        <div class="drill-title">
+            <span>{{ cluster.name }}
+                <span class="badge {{ cluster.badge }}" style="margin-left: 8px; font-size: 0.7rem;">
+                    {{ cluster.tier }} priority
+                </span>
+            </span>
+            <span class="drill-close" onclick="closeDrill('cluster', {{ loop.index0 }})">×</span>
+        </div>
+        <div class="drill-meta">
+            <div class="drill-stat"><div class="drill-stat-value">{{ cluster.count }}</div><div class="drill-stat-label">Signals</div></div>
+            <div class="drill-stat"><div class="drill-stat-value">{{ cluster.signal_frequency_score }}</div><div class="drill-stat-label">Freq Score</div></div>
+            <div class="drill-stat"><div class="drill-stat-value">{{ cluster.sources | length }}</div><div class="drill-stat-label">Sources</div></div>
+        </div>
+        <p class="section-body" style="margin-bottom: 12px;">
+            {{ cluster.description }}
+        </p>
+        <p class="text-meta" style="display:block; margin-bottom: 16px; font-size:0.78rem;">
+            Frequency score = heuristic (50 + avg(signal_strength) × 40), not a claimed metric.
+        </p>
+
+        <!-- Source distribution -->
+        <div class="source-distribution" style="margin-bottom: 16px;">
+            {% set all_platforms = cluster.sources | map(attribute='platform') | list %}
+            {% set total_plat = all_platforms | length %}
+            {% for p in ['github', 'hn', 'huggingface', 'reddit'] %}
+                {% set pcount = all_platforms | select('equalto', p) | list | length %}
+                {% if pcount > 0 %}
+                <div class="source-dot {{ p }}" style="height: 12px;" title="{{ p }}: {{ pcount }} signals"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Evidence items — real, linked source URLs -->
+        {% for src in cluster.sources %}
+        <div class="drill-source-item">
+            <span class="source-platform badge badge-{{ src.platform | lower }}">{{ src.platform | capitalize }}</span>
+            <div class="source-excerpt" style="margin-top: 4px;">{{ src.excerpt }}</div>
+            <a href="{{ src.url }}" target="_blank">→ original source</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+<!-- ─── Funnel Drill-down Templates (methodology, not numbers) ───────── -->
+{% set funnel_stages = [
+    {"id": 0, "title": "Agent Downloads", "desc": "Track: GitHub release downloads, PyPI/npm pull counts, Docker Hub pulls, HuggingFace model downloads. Hypothesis: open-weights adoption grows faster than closed APIs when self-hosting cost < 20% of token spend.", "method": "GitHub Releases API + Docker Hub pulls + HF download stats"},
+    {"id": 1, "title": "Nous Portal Signups", "desc": "Track: registrations after agent install, time-to-signup, activation events. Hypothesis: developers who self-host will register if the portal unlocks collaboration (shared model hosting, team workspaces).", "method": "Portal auth events + referral source attribution"},
+    {"id": 2, "title": "Paid Tier Adopters", "desc": "Track: conversion from free to tiered pricing. Hypothesis: cost-savings vs closed-model APIs drives upgrade within 7 days of cost-awareness. Version correlation shows higher tiers adopt newer Hermes faster.", "method": "Stripe subscription events + version check-in logs"},
+    {"id": 3, "title": "Annualized Revenue", "desc": "Track: MRR across pricing tiers. Hypothesis: lower tier is primary growth engine. Revenue scales with developer adoption, not enterprise land-grab.", "method": "Stripe revenue reporting + ARR calculator"}
+] %}
+
+{% for stage in funnel_stages %}
+<div class="drill-template" id="funnel-template-{{ stage.id }}" data-funnel-id="{{ stage.id }}">
+    <div class="drill-detail">
+        <div class="drill-title">
+            <span>{{ stage.title }} <span class="badge badge-built" style="margin-left: 8px; font-size: 0.7rem;">Funnel Stage</span></span>
+            <span class="drill-close" onclick="closeDrill('funnel', {{ stage.id }})">×</span>
+        </div>
+        <p class="section-body">{{ stage.desc }}</p>
+        <p class="section-body" style="margin-top: 12px;">
+            <strong style="color:var(--cyan);">Instrumentation:</strong> {{ stage.method }}
+        </p>
+        <p class="text-meta" style="font-size: 0.8rem;">
+            These figures will populate once instrumentation is live. Until then, this shows the funnel
+            structure and the metrics I'd track — not claimed numbers.
+        </p>
+    </div>
+</div>
+{% endfor %}
+
+<!-- ─── Competitor Drill-down Templates ──────────────────────────────── -->
+{% for comp, count in competitor_data.items() %}
+<div class="drill-template" id="competitor-template-{{ comp }}">
+    <div class="drill-detail">
+        <div class="drill-title">
+            <span>{{ comp | capitalize }} Friction <span class="badge badge-hermes" style="margin-left: 8px; font-size: 0.7rem;">{{ count }} mention{{ 's' if count != 1 else '' }}</span></span>
+            <span class="drill-close" onclick="closeDrill('competitor', '{{ comp }}')">×</span>
+        </div>
+        <p class="section-body">
+            {{ count }} public developer signals (HN, GitHub, HuggingFace, Reddit) mention {{ comp | capitalize }}
+            in the context of cost, rate limits, or vendor-lock concerns with closed-model APIs.
+        </p>
+
+        {% if competitor_evidence and comp in competitor_evidence and competitor_evidence[comp] %}
+        <div class="drill-stat"><div class="drill-stat-value">{{ competitor_evidence[comp] | length }}</div><div class="drill-stat-label">Evidence items</div></div>
+
+        {% for src in competitor_evidence[comp] %}
+        <div class="drill-source-item">
+            <span class="source-platform badge badge-{{ src.platform | lower }}">{{ src.platform | capitalize }}</span>
+            <div class="source-excerpt" style="margin-top: 4px;">{{ src.excerpt }}</div>
+            <a href="{{ src.url }}" target="_blank">→ original source</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-meta" style="font-size: 0.82rem;">
+            Real evidence will populate from live signal data when the database contains
+            matching developer discussions about {{ comp | capitalize }}.
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+{% if not prototype_data.sample_clusters %}
+<div class="card" style="text-align: center; padding: 48px 24px;">
+    <p class="text-dim">No signals found yet.</p>
+    <p class="text-meta">Run the signal discovery pipeline to pull fresh data from public APIs.</p>
+</div>
+{% endif %}
+
+<!-- REAL SIGNAL framing removed — subtitle is now inline in the header above.
+     Pipeline documentation lives in README.md: https://github.com/trillionverselabs-boop/nous-gtm -->
+
+<!-- ─── Stats + Data Sources (compact, single row) ─────────────────── -->
+<div style="display: grid; grid-template-columns: 2fr 3fr; gap: 24px; margin-top: 32px;">
+    <!-- Stats -->
+    <div>
+        <h3 class="section-title accent-green" style="margin-bottom: 12px;">Stats</h3>
+        <div class="stats-grid">
+            {% for label, value, color in prototype_data.cluster_stats %}
+            <div class="stat-card">
+                <div class="stat-value accent-{{ color }}">{{ value }}</div>
+                <div class="stat-label">{{ label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Data Sources -->
+    <div>
+        <h3 class="section-title accent-cyan" style="margin-bottom: 12px;">Data Sources</h3>
+        <div class="grid grid-4">
+            {% for src in prototype_data.sources_status %}
+            <div class="card">
+                <div class="flex items-center justify-content-space-between">
+                    <h4>{{ src.name }}</h4>
+                    <span class="badge {{ src.badge }}">{{ src.status }}</span>
+                </div>
+                <p class="section-body">{{ src.description }}</p>
+                <p class="text-meta">{{ src.access }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+// ── Drill-down: show detail panel below the dashboard row ──────────
+function showDrill(type, key) {
+    var holder = document.getElementById('drill-holder');
+    holder.innerHTML = '';
+    holder.style.display = 'block';
+    document.querySelectorAll('.drill-template').forEach(function(t) { t.style.display = 'none'; });
+
+    var selector = type === 'cluster' ? 'cluster-template-' + key :
+                   type === 'funnel'  ? 'funnel-template-' + key :
+                                      'competitor-template-' + key;
+    var template = document.getElementById(selector);
+    if (template) {
+        template.style.display = 'block';
+        var clone = template.cloneNode(true);
+        clone.style.display = 'block';
+        holder.appendChild(clone);
+    }
+    holder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeDrill(type, key) {
+    var holder = document.getElementById('drill-holder');
+    holder.innerHTML = '';
+    holder.style.display = 'none';
+    var selector = type === 'cluster' ? 'cluster-template-' + key :
+                   type === 'funnel'  ? 'funnel-template-' + key :
+                                      'competitor-template-' + key;
+    var template = document.getElementById(selector);
+    if (template) template.style.display = 'block';
+}
+
+function toggleCluster(idx) { showDrill('cluster', idx); }
+function toggleFunnel(idx)  { showDrill('funnel', idx); }
+function toggleCompetitor(key) { showDrill('competitor', key); }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.source-dot[data-width]').forEach(function(dot) {
+        dot.style.width = dot.dataset.width + '%';
+    });
+});
+</script>
+
+{% endblock %}
